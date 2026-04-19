@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mommy Mariana</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@400;600&display=swap');
+
+        body {
+            margin: 0; padding: 0;
+            background: #1a000a;
+            color: #f5e6d3;
+            font-family: 'Cormorant Garamond', serif;
+            overflow: hidden;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(212, 170, 116, 0.12) 0%, transparent 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5.5rem;
+            color: #d4a574;
+            text-shadow: 0 0 40px #d4a574, 0 0 80px rgba(212, 165, 116, 0.6);
+            margin: 30px 0 10px 0;
+            letter-spacing: 6px;
+        }
+
+        .subtitle {
+            font-size: 1.6rem;
+            color: #f5d9b0;
+            font-style: italic;
+            margin-bottom: 40px;
+            text-shadow: 0 0 15px rgba(245, 217, 176, 0.5);
+        }
+
+        .main-image {
+            max-width: 100%;
+            height: auto;
+            border: 6px solid #d4a574;
+            box-shadow: 0 0 60px rgba(212, 165, 116, 0.7);
+            border-radius: 12px;
+            transition: all 0.6s ease;
+        }
+        .main-image:hover {
+            box-shadow: 0 0 90px rgba(212, 165, 116, 0.9);
+            transform: scale(1.02);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 14px;
+            margin: 60px auto;
+            max-width: 1000px;
+        }
+        .gallery-grid img {
+            width: 100%;
+            height: 175px;
+            object-fit: cover;
+            border: 3px solid #d4a574;
+            border-radius: 10px;
+            transition: all 0.4s ease;
+        }
+        .gallery-grid img:hover {
+            transform: scale(1.08) rotate(1deg);
+            border-color: #f5e6d3;
+            box-shadow: 0 0 25px #d4a574;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div class="content">
+        <h1>MOMMY MARIANA</h1>
+        <p class="subtitle">Come here, sweetheart… Mommy’s waiting ♡</p>
+        
+        <img src="https://i.postimg.cc/KcfDfdvs/mommyback.png" class="main-image" alt="Mommy Mariana">
+        
+        <h2 style="margin:60px 0 25px 0; color:#d4a574; font-size:2.2rem;">Gallery</h2>
+        <div class="gallery-grid">
+            <img src="https://i.postimg.cc/zXK1P7KB/160799614.jpg">
+            <img src="https://i.postimg.cc/VLBG5QXt/1277725612.jpg">
+            <img src="https://i.postimg.cc/pLC6cbTv/442553140.jpg">
+            <img src="https://i.postimg.cc/cJJ5V9gn/465359430.jpg">
+            <img src="https://i.postimg.cc/PqFFhWYF/578680630.jpg">
+            <img src="https://i.postimg.cc/ZRBsqWLY/691887105.jpg">
+            <img src="https://i.postimg.cc/yx0fF25w/751107663.jpg">
+            <img src="https://i.postimg.cc/852KfTyR/989041751.jpg">
+            <img src="https://i.postimg.cc/QC9X77b7/36772196-l.jpg">
+            <img src="https://i.postimg.cc/mkHpzj7x/2f3970d8fe7b30c38fdf9c514a3630a5.png">
+            <img src="https://i.postimg.cc/8CZ0qjTB/36772196-l.jpg">
+            <img src="https://i.postimg.cc/mgNqymq6/676d34a024f61824120376bf.jpg">
+            <img src="https://i.postimg.cc/8zB3mZ3x/6783c77e24f618241252794d.webp">
+            <img src="https://i.postimg.cc/y8ztRMfr/757ad423-836b-47a3-8ad1-6f6770cd2121.webp">
+            <img src="https://i.postimg.cc/2Sm9y46X/f4025f05ead62625cb0d6f5d4c0a4913.png">
+        </div>
+    </div>
+
+</body>
+</html>
