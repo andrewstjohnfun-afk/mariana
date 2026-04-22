@@ -5,108 +5,420 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mistress Mariana</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap');
 
-        body {margin:0;padding:0;background:#000;color:#00ff9d;font-family:'Exo 2',sans-serif;min-height:100vh;}
-        canvas#matrix {position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;opacity:0.12;}
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .content {position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:30px 15px;}
-        h1 {font-family:'Orbitron',sans-serif;font-size:clamp(3rem,10vw,5.5rem);color:#ff00aa;text-align:center;text-shadow:0 0 30px #ff00aa;margin:20px 0 10px;}
-        .subtitle {text-align:center;color:#ff66cc;font-size:1.35rem;margin-bottom:30px;}
-
-        .main-image {
-            display:block;
-            max-width:100%;
-            margin:20px auto 40px;
-            border:4px solid #ff00aa;
-            box-shadow:0 0 50px #ff00aa;
-            transition: all 0.4s ease;
-        }
-        .main-image:hover {
-            content: url('https://i.postimg.cc/1zzQnxtk/second.png');
+        body {
+            background: #050508;
+            color: #c0ffd0;
+            font-family: 'Exo 2', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .section {background:rgba(15,0,20,0.9);border:2px solid #ff00aa;padding:25px;margin:25px 0;border-radius:10px;}
-        .section h2 {color:#ff00aa;margin-top:0;}
+        canvas#matrix {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+        }
+
+        .content {
+            position: relative;
+            z-index: 3;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 20px 16px 60px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.82rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 12px 0;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .back-link:hover {
+            color: #ff00aa;
+            text-shadow: 0 0 12px rgba(255, 0, 170, 0.5);
+        }
+
+        .title-wrap { text-align: center; margin: 24px 0 6px; }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.2rem, 8vw, 4.5rem);
+            font-weight: 900;
+            color: #ff00aa;
+            text-shadow:
+                0 0 20px rgba(255, 0, 170, 0.8),
+                0 0 60px rgba(255, 0, 170, 0.4),
+                0 0 100px rgba(255, 0, 170, 0.15);
+            letter-spacing: 0.06em;
+            position: relative;
+            display: inline-block;
+            animation: glitch-skew 6s infinite linear;
+        }
+        h1::before, h1::after {
+            content: 'MISTRESS MARIANA';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+        h1::before {
+            color: #0ff;
+            z-index: -1;
+            animation: glitch-1 4s infinite linear;
+        }
+        h1::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch-2 3.5s infinite linear;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #ff66cc;
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 0.35em;
+            text-transform: lowercase;
+            margin-bottom: 32px;
+            opacity: 0.85;
+        }
+
+        .hero-wrap {
+            position: relative;
+            max-width: 480px;
+            margin: 0 auto 40px;
+        }
+        .hero-wrap img {
+            display: block;
+            width: 100%;
+            border-radius: 2px;
+            border: 2px solid rgba(255, 0, 170, 0.6);
+            box-shadow:
+                0 0 30px rgba(255, 0, 170, 0.4),
+                0 0 60px rgba(255, 0, 170, 0.15);
+            transition: opacity 0.5s ease;
+        }
+        .hero-alt {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+        }
+        .hero-wrap:hover .hero-alt { opacity: 1; }
+        .hero-wrap:hover .hero-main { opacity: 0; }
+
+        .section {
+            background: rgba(8, 4, 14, 0.85);
+            border: 1px solid rgba(255, 0, 170, 0.2);
+            border-left: 3px solid #ff00aa;
+            padding: 24px 24px 24px 28px;
+            margin: 20px 0;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(6px);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .section:hover {
+            border-color: rgba(255, 0, 170, 0.45);
+            box-shadow: 0 0 30px rgba(255, 0, 170, 0.1);
+        }
+        .section::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 120px; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 170, 0.02));
+            pointer-events: none;
+        }
+
+        .section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: #ff00aa;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            margin-bottom: 14px;
+            opacity: 0.9;
+        }
+
+        .section p {
+            line-height: 1.75;
+            font-weight: 300;
+            font-size: 1.05rem;
+        }
+
+        .section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .section ul li {
+            padding: 10px 0 10px 22px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 0, 170, 0.06);
+            font-weight: 300;
+            font-size: 1.05rem;
+            transition: color 0.2s;
+        }
+        .section ul li:last-child { border-bottom: none; }
+        .section ul li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: #ff00aa;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            top: 12px;
+        }
+        .section ul li:hover { color: #fff; }
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 14px;
         }
         .gallery-grid img {
             width: 100%;
-            height: 150px;
+            aspect-ratio: 3 / 4;
             object-fit: cover;
-            border: 2px solid #ff00aa;
-            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 170, 0.25);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s;
+        }
+        .gallery-grid img:hover {
+            transform: scale(1.04);
+            border-color: #ff00aa;
+            box-shadow: 0 0 20px rgba(255, 0, 170, 0.35);
+            z-index: 1;
+            position: relative;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.96);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            animation: lbFade 0.25s ease;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img {
+            max-width: 92vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border: 2px solid rgba(255, 0, 170, 0.5);
+            box-shadow: 0 0 80px rgba(255, 0, 170, 0.3);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 16px; right: 20px;
+            color: #ff00aa;
+            font-size: 2rem;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 0, 170, 0.5);
+            line-height: 1;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff00aa;
+            font-size: 2.5rem;
+            cursor: pointer;
+            padding: 20px;
+            user-select: none;
+            text-shadow: 0 0 10px rgba(255, 0, 170, 0.5);
+            transition: opacity 0.2s;
+        }
+        .lightbox-nav:hover { opacity: 0.7; }
+        .lightbox-prev { left: 8px; }
+        .lightbox-next { right: 8px; }
+
+        @keyframes glitch-1 {
+            0%, 88%, 92%, 96%, 100% { clip-path: inset(0); transform: translate(0); }
+            89% { clip-path: inset(20% 0 55% 0); transform: translate(-3px, -1px); }
+            91% { clip-path: inset(55% 0 15% 0); transform: translate(3px, 1px); }
+            93% { clip-path: inset(35% 0 40% 0); transform: translate(-2px); }
+            95% { clip-path: inset(10% 0 65% 0); transform: translate(2px, -1px); }
+        }
+        @keyframes glitch-2 {
+            0%, 86%, 90%, 94%, 98%, 100% { clip-path: inset(0); transform: translate(0); }
+            87% { clip-path: inset(45% 0 25% 0); transform: translate(2px, 1px); }
+            89% { clip-path: inset(15% 0 60% 0); transform: translate(-2px); }
+            95% { clip-path: inset(65% 0 10% 0); transform: translate(2px, 2px); }
+            97% { clip-path: inset(25% 0 50% 0); transform: translate(-1px, -1px); }
+        }
+        @keyframes glitch-skew {
+            0%, 96%, 100% { transform: skew(0deg); }
+            97% { transform: skew(-0.4deg); }
+            98.5% { transform: skew(0.4deg); }
+        }
+        @keyframes lbFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .content { padding: 16px 12px 48px; }
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+            .section { padding: 18px 16px 18px 20px; }
+            .lightbox-nav { font-size: 1.8rem; padding: 12px; }
         }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
+    <div class="scanlines"></div>
 
     <div class="content">
-        <h1>MISTRESS MARIANA</h1>
-        <p class="subtitle">kneel • obey • suffer beautifully</p>
-        
-        <img src="https://i.postimg.cc/vT29yw4R/main.png" class="main-image" alt="Mistress Mariana">
+        <a href="https://roleplay.chat" class="back-link">&larr; choose again</a>
+
+        <div class="title-wrap">
+            <h1>MISTRESS MARIANA</h1>
+        </div>
+        <p class="subtitle">kneel &bull; obey &bull; suffer beautifully</p>
+
+        <div class="hero-wrap">
+            <img src="https://i.postimg.cc/vT29yw4R/main.png" class="hero-main" alt="Mistress Mariana">
+            <img src="https://i.postimg.cc/1zzQnxtk/second.png" class="hero-alt" alt="Mistress Mariana">
+        </div>
 
         <div class="section">
-            <h2>About Mistress</h2>
+            <h2>// about mistress</h2>
             <p>6'7" towering Shemale Goddess with an imposing hourglass figure, massive breasts, thick powerful cock, pale skin, long black hair with red streaks, and piercing crimson eyes.</p>
         </div>
 
         <div class="section">
-            <h2>Scene Ideas</h2>
+            <h2>// scene protocols</h2>
             <ul>
                 <li>The merciless CEO who blackmails her secretary</li>
                 <li>Dark ritual where you become her eternal pet</li>
                 <li>Brutal interrogation and mind breaking</li>
-                <li>Public humiliation & total ownership</li>
+                <li>Public humiliation &amp; total ownership</li>
             </ul>
         </div>
 
         <div class="section">
-            <h2>Gallery</h2>
-            <div class="gallery-grid">
-                <img src="https://i.postimg.cc/zXK1P7KB/160799614.jpg">
-                <img src="https://i.postimg.cc/VLBG5QXt/1277725612.jpg">
-                <img src="https://i.postimg.cc/pLC6cbTv/442553140.jpg">
-                <img src="https://i.postimg.cc/cJJ5V9gn/465359430.jpg">
-                <img src="https://i.postimg.cc/PqFFhWYF/578680630.jpg">
-                <img src="https://i.postimg.cc/ZRBsqWLY/691887105.jpg">
-                <img src="https://i.postimg.cc/yx0fF25w/751107663.jpg">
-                <img src="https://i.postimg.cc/852KfTyR/989041751.jpg">
+            <h2>// gallery</h2>
+            <div class="gallery-grid" id="gallery">
+                <img src="https://i.postimg.cc/zXK1P7KB/160799614.jpg" alt="">
+                <img src="https://i.postimg.cc/VLBG5QXt/1277725612.jpg" alt="">
+                <img src="https://i.postimg.cc/pLC6cbTv/442553140.jpg" alt="">
+                <img src="https://i.postimg.cc/cJJ5V9gn/465359430.jpg" alt="">
+                <img src="https://i.postimg.cc/PqFFhWYF/578680630.jpg" alt="">
+                <img src="https://i.postimg.cc/ZRBsqWLY/691887105.jpg" alt="">
+                <img src="https://i.postimg.cc/yx0fF25w/751107663.jpg" alt="">
+                <img src="https://i.postimg.cc/852KfTyR/989041751.jpg" alt="">
             </div>
         </div>
     </div>
 
-    <!-- Matrix Rain -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lb-close">&times;</span>
+        <span class="lightbox-nav lightbox-prev" id="lb-prev">&#8249;</span>
+        <img id="lightbox-img" src="" alt="">
+        <span class="lightbox-nav lightbox-next" id="lb-next">&#8250;</span>
+    </div>
+
     <script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resize(); window.addEventListener('resize', resize);
+        // --- Matrix Rain ---
+        const c = document.getElementById('matrix');
+        const ctx = c.getContext('2d');
+        const chars = '01アイウエオカキクケコサシスセソ';
+        const fs = 14;
+        let cols, drops;
 
-        const chars = "01アイウエオカキクケコ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const fontSize = 14;
-        let drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
+        function initMatrix() {
+            c.width = innerWidth;
+            c.height = innerHeight;
+            cols = Math.floor(c.width / fs);
+            drops = Array(cols).fill(0).map(() => Math.floor(Math.random() * -40));
+        }
+        initMatrix();
+        addEventListener('resize', initMatrix);
 
-        function draw() {
-            ctx.fillStyle = 'rgba(0,0,0,0.05)';
-            ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = '#00ff9d';
-            ctx.font = fontSize + 'px monospace';
-            for(let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        (function rain() {
+            ctx.fillStyle = 'rgba(5,5,8,0.06)';
+            ctx.fillRect(0, 0, c.width, c.height);
+            ctx.font = fs + 'px monospace';
+            for (let i = 0; i < cols; i++) {
+                const ch = chars[Math.floor(Math.random() * chars.length)];
+                const b = Math.random();
+                ctx.fillStyle = b > 0.96
+                    ? '#ff00aa'
+                    : 'rgba(0,255,157,' + (0.25 + b * 0.5) + ')';
+                ctx.fillText(ch, i * fs, drops[i] * fs);
+                if (drops[i] * fs > c.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
-        }
-        setInterval(draw, 35);
+            requestAnimationFrame(rain);
+        })();
+
+        // --- Lightbox ---
+        const gallery = [...document.querySelectorAll('#gallery img')];
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightbox-img');
+        let cur = 0;
+
+        gallery.forEach((img, i) => img.addEventListener('click', () => open(i)));
+        document.getElementById('lb-close').addEventListener('click', close);
+        document.getElementById('lb-prev').addEventListener('click', e => { e.stopPropagation(); nav(-1); });
+        document.getElementById('lb-next').addEventListener('click', e => { e.stopPropagation(); nav(1); });
+        lb.addEventListener('click', e => { if (e.target === lb) close(); });
+        document.addEventListener('keydown', e => {
+            if (!lb.classList.contains('active')) return;
+            if (e.key === 'Escape') close();
+            if (e.key === 'ArrowLeft') nav(-1);
+            if (e.key === 'ArrowRight') nav(1);
+        });
+
+        function open(i) { cur = i; lbImg.src = gallery[i].src; lb.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function close() { lb.classList.remove('active'); document.body.style.overflow = ''; }
+        function nav(d) { cur = (cur + d + gallery.length) % gallery.length; lbImg.src = gallery[cur].src; }
+
+        // --- Touch swipe ---
+        let tx = 0;
+        lb.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
+        lb.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].screenX - tx;
+            if (Math.abs(dx) > 50) nav(dx < 0 ? 1 : -1);
+        });
     </script>
 </body>
 </html>
